@@ -1,7 +1,7 @@
 -- Rapidly-exploring Random Trees
 local lib = {}
 local kdtree = require'kdtree'
-local has_dubins, dubins = require'dubins'
+local has_dubins, dubins = pcall(require, 'dubins')
 local unpack = unpack or require'table'.unpack
 local systems = {}
 
@@ -321,6 +321,7 @@ local function plan(self, start, goal)
   self.kd:insert(self.start, self.start.id)
   self.tree[self.start.id] = self.start
   -- Do not add the goal to the kd-tree
+  return self
 end
 
 -- Input: list of min and max for each dimension {{a,b},{c,d},...}
@@ -370,6 +371,9 @@ end
 
 
 function systems.dubins(parameters)
+  if not has_dubins then
+    return false, dubins
+  end
   parameters = parameters or {}
   local sys = {}
   -- circular_obstacles: {{x_center, y_center, radius}, ...}
@@ -418,7 +422,9 @@ function systems.dubins(parameters)
   function sys.distState(self, from, to)
     -- Check if close enough to each other...?
     local path, err = dubins.shortest_path(from, to, TURNING_RADIUS)
-    if ret~=0 then return false, "Bad Dubins path" end
+    if not path then return
+      false, err
+    end
     -- Give the length and the path
     local length = dubins.path_length(path)
     -- Should return the extra information
@@ -471,7 +477,7 @@ function systems.dubins(parameters)
   function sys.trace(self)
     local step_size = self.DISCRETIZATION_STEP -- meters
     local dist = 0
-    local path_xy = {reversed=true, unpack(self.goal)}
+    local path_xy = {reversed=true, {unpack(self.goal)}}
     local cur = self.goal
     while cur.parent do
       local length, path = self:distState(cur.parent, cur)

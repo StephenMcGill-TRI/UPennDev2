@@ -50,7 +50,7 @@ lib.path_length = path_length
 
 local function path_sample(path, t)
   local q = ffi.new("double[3]")
-  dubins.path_sample(path, t, q)
+  dubins.dubins_path_sample(path, t, q)
   local xya = {q[0], q[1], q[2]}
   return xya
 end
@@ -62,7 +62,7 @@ local function path_list(path, a, b, step_size, path_tbl)
     path_tbl = {}
   end
   for t=a,b,step_size do
-    local xya = dubins.path_sample(path, t)
+    local xya = dubins.dubins_path_sample(path, t)
     tinsert(path_tbl, xya)
   end
   return path_tbl
