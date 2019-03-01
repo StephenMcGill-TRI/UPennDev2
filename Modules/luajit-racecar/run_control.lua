@@ -184,23 +184,8 @@ for name, route in pairs(routes) do
 end
 -- Print the knots
 for name, knots in pairs(route_knots) do
-  -- print("Route knots", name)
+  print("Route", name)
   for i, kn in ipairs(knots) do print(i, unpack(kn)) end
-end
-
--- Intersection lookup helper
-local all_knots = {
-  tree = require'kdtree'.create(2),
-  last = {n = 0}
-}
-for name, knots in pairs(route_knots) do
-  print(name, "n_knots", #knots)
-  for i, knot in ipairs(knots) do
-    local info = {name, i}
-    table.insert(all_knots, info)
-    -- Insert with the ID to the route information
-    all_knots.tree:insert(knot, #all_knots)
-  end
 end
 
 -- Go from a route to a list of points (path)
@@ -242,6 +227,21 @@ do
   path.closed = true
   control.generate_kdtree(path)
   paths.roundabout2 = path
+end
+
+-- Intersection lookup helper
+local all_knots = {
+  tree = require'kdtree'.create(2),
+  last = {n = 0}
+}
+for name, knots in pairs(route_knots) do
+  print(name, "n_knots", #knots)
+  for i, knot in ipairs(knots) do
+    local info = {name, i}
+    table.insert(all_knots, info)
+    -- Insert with the ID to the route information
+    all_knots.tree:insert(knot, #all_knots)
+  end
 end
 
 -- TODO: Paths should come from a separate program
