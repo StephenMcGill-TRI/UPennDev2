@@ -88,10 +88,10 @@ local function set_obs(map, idx)
 end
 for _,c in ipairs(circular_obstacles) do
   local xc, yc, rc = unpack(c)
-  costmap:circle(xc, yc, rc, set_obs)
+  costmap:circle({xc, yc}, rc, set_obs)
 end
 
-assert(costmap:save"/tmp/costmapRRT")
+assert(costmap:save"/tmp/costmapRRT.pgm")
 
 print("Planning the car route!")
 

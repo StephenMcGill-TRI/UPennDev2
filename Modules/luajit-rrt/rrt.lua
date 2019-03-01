@@ -57,9 +57,11 @@ local function is_collision0() return false end
 
 local function trace0(self)
   local path_xy = {reversed=true}
+  local length = 0
   local cur = self.goal
   while cur.parent do
     local dist, dists = self:distState(cur.parent, cur)
+    length = length + dist
     local incrementTotal = dist / self.DISCRETIZATION_STEP
     for j=1,#dists do dists[j] = dists[j] / incrementTotal end
     local inter = {unpack(cur.parent)}
@@ -85,7 +87,7 @@ local function trace0(self)
     -- end
     cur = cur.parent
   end
-  return path_xy
+  return path_xy, length
 end
 
 -- Walk from state to goal
