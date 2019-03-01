@@ -11,6 +11,7 @@ local tan = require'math'.tan
 local tinsert = require'table'.insert
 local unpack = unpack or require'table'.unpack
 --
+local has_dubins = pcall(require, 'dubins')
 local has_grid, grid = pcall(require, 'grid')
 --
 local mod_angle = require'transform'.mod_angle
@@ -191,7 +192,7 @@ local function path_from_waypoints(waypoints, params)
       -- Because wp_1 and wp_2 are inclusive
       -- Closed/Open interval concatenation, except last:
       -- [a1, b1), [a2, b2), [a3, b3), ... [a_n, b_n]
-      -- TODO: Ensure thatn "arc" behaves this way, too
+      -- TODO: Ensure that "arc" behaves this way, too
       if i < n_waypoints - 1 or closed then table.remove(path) end
       -- Increment the length
       length = length + d_pts

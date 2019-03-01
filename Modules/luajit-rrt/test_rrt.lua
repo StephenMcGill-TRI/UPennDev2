@@ -47,12 +47,9 @@ local grid_params = {
   datatype = 'double'
 }
 local costmap = grid.new(grid_params)
-
-local function color_path(map, idx, i)
-  map[idx] = 127
-end
+local function color_path(map, idx) map[idx] = 127 end
 costmap:path(path_xy, color_path)
-assert(costmap:save"/tmp/costmapRRT_path_default")
+assert(costmap:save"/tmp/costmapRRT_path_default.pgm")
 
 
 -- Test the dubins model for the car
