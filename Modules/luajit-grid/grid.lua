@@ -126,6 +126,8 @@ end
 
 -- Draw a filled circle
 local function circle(self, pc, rc, cb)
+  -- pc: Center point
+  -- rc: Radius from center
   if type(cb) ~='function' then cb = set_max end
   local grid = self.grid
   local scale = self.scale
