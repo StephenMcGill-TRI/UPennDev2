@@ -167,8 +167,8 @@ local function arc(self, pc, rc, a1, a2, cb)
   local xy2ij, ij2idx = self.xy2ij, self.ij2idx
   local xc, yc = unpack(pc, 1, 2)
   local idx1
-  local ang_resolution = atan2(self.scale, rc)
-  if a2 < a1 then ang_resolution = -1 * ang_resolution end
+  local dir = a2 > a1 and 1 or -1
+  local ang_resolution = dir * atan2(self.scale, rc)
   for angle=a1, a2, ang_resolution do
     local c, s = cos(angle), sin(angle)
     local dx, dy = c * rc, s * rc

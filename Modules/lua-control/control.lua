@@ -6,13 +6,11 @@ local ceil = require'math'.ceil
 local cos = require'math'.cos
 local sin = require'math'.sin
 local sqrt = require'math'.sqrt
-local tan = require'math'.tan
 local tinsert = require'table'.insert
 local unpack = unpack or require'table'.unpack
 --
 local mod_angle = require'transform'.mod_angle
 local tf2D = require'transform'.tf2D
-local tf2D_inv = require'transform'.tf2D_inv
 --
 local has_kdtree, kdtree = pcall(require, 'kdtree')
 
@@ -151,7 +149,7 @@ local function pure_pursuit(params)
   end
   local threshold_close = tonumber(params.threshold_close) or 0.25
   local lookahead = tonumber(params.lookahead) or 1
-  local steps_lookahead = math.ceil(lookahead / path.ds)
+  local steps_lookahead = ceil(lookahead / path.ds)
   local id_lookahead_last = false
   local fn_nearby = params.fn_nearby
   if type(fn_nearby) ~= "function" then fn_nearby = get_nearest end

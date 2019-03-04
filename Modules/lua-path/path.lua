@@ -11,7 +11,7 @@ local tan = require'math'.tan
 local tinsert = require'table'.insert
 local unpack = unpack or require'table'.unpack
 --
-local has_dubins = pcall(require, 'dubins')
+local has_dubins, dubins = pcall(require, 'dubins')
 local has_grid, grid = pcall(require, 'grid')
 --
 local mod_angle = require'transform'.mod_angle
@@ -133,25 +133,39 @@ local function path_arc(pc, rc, a1, a2, ds, path)
   -- ds: path increment
   if type(path) ~= 'table' then path = {} end
   local xc, yc = unpack(pc, 1, 2)
-  -- Clockwise (-1) or counterclockwise (1)
-  local dir = a2 > a1 and 1 or -1
-  -- Offset for drawing path tangent to arc
-  local tangent_offset = dir * math.pi/2
   -- Cheat and set the arc length.
   -- NOTE: May be better to compute the line segments, though...
   local arc_length = rc * fabs(a2 - a1)
   local n_segments = ceil(arc_length / ds)
   local ds1 = arc_length / n_segments
-  local dth1 = dir * ds1 / rc
-  local th = a1
+  -- Clockwise (-1) or counterclockwise (1)
+  local dir = a2 > a1 and 1 or -1
+  local ang_resolution = dir * ds1 / rc
+  -- Offset for drawing path tangent to arc
+  local tangent_offset = dir * math.pi/2
   -- Start from 0 for inclusive
+  local th = a1
+  -- for th = a1, a2, ang_resolution do
   for _=0,n_segments do
     local c, s = cos(th), sin(th)
     local dx, dy = c * rc, s * rc
     local px, py = xc + dx, yc + dy
-    tinsert(path, {px, py, th + tangent_offset})
-    th = th + dth1
+    -- TODO: mod_angle... could do later, though
+    local se2 = {px, py, th + tangent_offset}
+    tinsert(path, se2)
+    th = th + ang_resolution
   end
+  -- SVG
+  -- <path d="M80 80
+  --          A 45 45, 0, 0, 0, 125 125
+  --          L 125 80 Z" fill="green"/>
+  -- local arc = table.concat({
+  --   -- Move to the center of the arc
+  --   string.format("M %f %f", unpack(rc)),
+  --   string.format("A %f %f, 0, 0, 0, %f %f", px1, py1, px2, py2),
+  --   string.format("M %f %f", px2, py2),
+  --   }, ' ')
+
   return path, arc_length
 end
 lib.path_arc = path_arc

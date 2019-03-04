@@ -1,6 +1,7 @@
 #!/usr/bin/env luajit
 
 local path = require'path'
+local unpack = unpack or require'table'.unpack
 
 local ds = 0.01
 local name_test = arg[1] or 'outer'
